@@ -281,7 +281,11 @@ A timed-out tool may still have run. Check the result in the connected app befor
 
 Missing required IDs or names for `composio dev auth-configs info`, `composio tools info`, and `composio dev triggers create` or `enable` cause exit `1`. The `--custom-credentials` option for auth config creation and `--trigger-config` option for trigger creation must contain JSON objects. Invalid input prints a message on stderr, leaves stdout empty, and sends no request.
 
-If `--account` matches no connected account, `composio execute` and `composio proxy` print a usage error on stderr and exit `1`. If `composio orgs switch` has no usable stored API key, it exits `1` and asks you to run `composio login`.
+If `--account` matches no connected account, `composio execute` and `composio proxy` print a usage error on stderr and exit `1`. They fail the same way when you omit `--account` and the toolkit has more than one active connected account, unless one of them has the alias `default`. The error lists the available accounts; pass `--account <alias or id>` to choose one.
+
+`composio execute` uploads local files only for inputs the tool's schema marks as file uploads, and detects the MIME type from the file extension. If an input describes a local file path but is not a file upload, and the path names a file that exists on your machine, the command exits `1` without running the tool, including with `--dry-run`. Without this check, the tool would receive the path text instead of the file content.
+
+If `composio orgs switch` has no usable stored API key, it exits `1` and asks you to run `composio login`.
 
 ### Execution telemetry
 
